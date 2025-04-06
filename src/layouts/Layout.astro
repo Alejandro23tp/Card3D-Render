@@ -1,0 +1,24 @@
+---
+import { Canvas } from '@react-three/fiber'
+import { Environment, Lightformer } from '@react-three/drei'
+import { Physics } from '@react-three/rapier'
+import { Band } from '../components/Band.jsx'
+import '../styles/global.css'
+---
+
+<html>
+  <head>
+    <title>Astro + Three.js</title>
+  </head>
+  <body>
+    <Canvas camera={{ position: [0, 0, 13], fov: 25 }}>
+      <ambientLight intensity={Math.PI} />
+      <Physics>
+        <Band />
+      </Physics>
+      <Environment background blur={0.75}>
+        {/* ... (mismo código de Environment) */}
+      </Environment>
+    </Canvas>
+  </body>
+</html>
