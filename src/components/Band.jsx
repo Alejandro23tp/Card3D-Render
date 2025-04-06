@@ -34,7 +34,9 @@ export function Band({ maxSpeed = 50, minSpeed = 10 }) {
   }
 
   const { nodes, materials } = useGLTF('/models/tag.glb')
-  const texture = useTexture('/textures/band.jpg')
+  const texture = useTexture('/textures/band1.jpg')
+  const cardFrontTexture = useTexture('/textures/card_front.jpg') // imagen para el frente
+
   // Configurar el wrapping de la textura para MeshLine
   useEffect(() => {
     console.log('Texture loaded:', texture) // Verifica en la consola que se carga el asset
@@ -45,6 +47,14 @@ export function Band({ maxSpeed = 50, minSpeed = 10 }) {
       texture.needsUpdate = true;
     }
   }, [texture])
+  // Agregar efecto para ajustar la orientación y tamaño de customCardTexture
+  useEffect(() => {
+    if(cardFrontTexture) {
+      cardFrontTexture.flipY = false; // corrige la inversión
+      cardFrontTexture.repeat.set(1, 1); // ajusta el tamaño, modifica los valores según necesites
+      cardFrontTexture.needsUpdate = true;
+    }
+  }, [cardFrontTexture])
   const { width, height } = useThree((state) => state.size)
   const [curve] = useState(() => {
     const c = new THREE.CatmullRomCurve3([
@@ -132,7 +142,8 @@ export function Band({ maxSpeed = 50, minSpeed = 10 }) {
           >
             <mesh geometry={nodes.card.geometry}>
               <meshPhysicalMaterial
-                map={materials.base.map}
+                map={cardFrontTexture} // textura del frente
+                side={THREE.FrontSide}
                 map-anisotropy={16}
                 clearcoat={1}
                 clearcoatRoughness={0.15}
@@ -160,3 +171,6 @@ export function Band({ maxSpeed = 50, minSpeed = 10 }) {
     </>
   )
 }
+
+// Se recomienda usar imágenes con una proporción de 2:3, por ejemplo, 1600x2400 píxeles
+// y ajustar propiedades como repeat, offset y center para que encajen con la UV de la card.
